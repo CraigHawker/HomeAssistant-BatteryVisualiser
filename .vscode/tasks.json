@@ -1,0 +1,89 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*?(Error|error|ERROR).*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": false,
+          "beginsPattern": "^.*?vite.*?building.*",
+          "endsPattern": "^.*?built in.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Build Release",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "build:release"],
+      "group": "build",
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*?(Error|error|ERROR).*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Dev Server",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*?(Error|error|ERROR).*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^\\s*VITE.*",
+          "endsPattern": "^.*?ready in.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false
+      }
+    },
+    {
+      "label": "Generate Preview",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "preview"],
+      "dependsOn": ["Build"],
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    }
+  ]
+}

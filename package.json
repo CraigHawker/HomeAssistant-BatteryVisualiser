@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:release": "npm run build"
+    "build:release": "npm run build",
+    "preview": "npm run build && node scripts/gen-preview.js"
   },
-  "dependencies": {
-    "handlebars": "^4.7.8"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "handlebars": "^4.7.8",
     "sass": "^1.77.8",
     "vite": "^5.4.10"
   }

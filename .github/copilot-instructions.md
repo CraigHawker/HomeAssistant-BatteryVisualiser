@@ -75,6 +75,22 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
   - .github/workflows/validate.yml for validation checks.
   - .github/workflows/release.yml for release publishing.
 
+## Build Strategy
+- **Template Precompilation**: Handlebars templates (.hbs files) are precompiled at build time via a custom Vite plugin, not compiled at runtime. This reduces bundle size significantly and improves performance.
+- **SCSS Bundling**: Styles are compiled to CSS and inlined into the final card JS output as a single-file distributable.
+- **No Runtime Handlebars**: The card uses only Handlebars runtime (`handlebars.runtime.js`), not the full compiler.
+- **Build Output**: Single file at dist/battery-card.js (~67 kB uncompressed, ~17 kB gzipped).
+
+## Development Tasks
+- `npm run dev` — Start Vite dev server for local preview with HMR.
+- `npm run build` — Build the card bundle and SCSS into dist/battery-card.js.
+- `npm run build:release` — Alias for build (matches release workflow script).
+- `npm run preview` — Build and generate test/preview.html with dummy battery data for HTML/CSS iteration.
+
+## Scripts and Tools
+- **scripts/gen-preview.js** — Generates test/preview.html with mock Home Assistant state and multiple card instances to test config variations.
+- **.vscode/tasks.json** — Defines VS Code tasks for Build, Build Release, Dev Server, and Generate Preview.
+
 ## Coding Quality
 - Remove unused code and imports.
 - Keep functions small and focused.

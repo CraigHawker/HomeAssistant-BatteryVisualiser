@@ -1,12 +1,15 @@
-import Handlebars from "handlebars/dist/handlebars.js";
+import Handlebars from "handlebars/dist/handlebars.runtime.js";
 import styles from "./styles/main.scss?inline";
-import cardTemplateSource from "./templates/card.hbs?raw";
-import batteryRowTemplateSource from "./templates/battery-row.hbs?raw";
-import batteryProgressTemplateSource from "./templates/battery-progress.hbs?raw";
+import renderCardTemplate from "./templates/card.hbs";
+import batteryRowTemplate from "./templates/battery-row.hbs";
+import batteryProgressTemplate from "./templates/battery-progress.hbs";
 import "./battery-card-editor.js";
 
 const DEFAULT_TITLE = "Batteries";
 const DEFAULT_EMPTY_MESSAGE = "No battery entities found.";
+
+Handlebars.registerPartial("battery-row", batteryRowTemplate);
+Handlebars.registerPartial("battery-progress", batteryProgressTemplate);
 
 const toEntityName = (entityId) => {
   const [domain, objectId] = entityId.split(".");
@@ -90,10 +93,7 @@ const normalizeBatteryRow = (entity) => {
   };
 };
 
-Handlebars.registerPartial("battery-row", batteryRowTemplateSource);
-Handlebars.registerPartial("battery-progress", batteryProgressTemplateSource);
 
-const renderCardTemplate = Handlebars.compile(cardTemplateSource);
 
 class BatteryVisualiserCard extends HTMLElement {
   constructor() {
