@@ -5,13 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prebuild": "npm run test",
     "build": "vite build",
     "build:release": "npm run build"
   },
   "dependencies": {},
   "devDependencies": {
     "handlebars": "^4.7.8",
+    "jsdom": "^26.1.0",
     "sass": "^1.77.8",
-    "vite": "^5.4.10"
+    "vite": "^5.4.10",
+    "vitest": "^2.1.8"
   }
 }
