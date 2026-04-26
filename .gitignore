@@ -1,0 +1,30 @@
+node_modules/
+dist/
+coverage/
+.vite/
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE/editor files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# Build artifacts and archives
+*.tgz
+*.zip
+
+# Environment files
+.env
+.env.*
+!.env.example
