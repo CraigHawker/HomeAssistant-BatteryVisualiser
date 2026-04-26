@@ -1,0 +1,12 @@
+:host {
+  --battery-border: color-mix(in srgb, var(--divider-color, #d9d9d9) 80%, transparent);
+  --battery-muted: var(--secondary-text-color, #6a6a6a);
+  --battery-track: color-mix(in srgb, var(--primary-text-color, #1f1f1f) 12%, transparent);
+  --battery-ok: #2e8b57;
+  --battery-mid: #d9901a;
+  --battery-low: #c2352a;
+  --battery-unknown: #8a8a8a;
+  --battery-radius: 10px;
+  --battery-cell-gap: 0.625rem;
+  --battery-head-size: 0.78rem;
+}

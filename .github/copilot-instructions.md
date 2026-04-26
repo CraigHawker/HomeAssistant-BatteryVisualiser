@@ -28,6 +28,7 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
 - src/templates/
   - card.hbs
   - battery-row.hbs
+  - battery-progress.hbs
 - src/styles/
   - main.scss
   - component partials as needed
@@ -38,13 +39,20 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
   - battery-card.js (release artifact)
 
 ## HTML and CSS Conventions
-- Use semantic container elements for list-based data:
-  - ul/li for battery lists unless layout requires table semantics.
+- Use semantic table elements for tabular battery data:
+  - table/thead/tbody/tr/th/td for the battery list.
 - Use CSS Grid for row layout so fields can be repositioned later.
 - Keep visible row columns in this order: device area, device friendly name, entity name, percentage.
+- Keep HTML intentionally minimal:
+  - Avoid long, overly explicit class names.
+  - Prefer lightweight structural classes and data attributes for targeting.
+  - Prefer hierarchical SCSS selectors under parent containers.
 - Prefer CSS custom properties for values and theming hooks.
 - Keep color/state logic primarily in CSS using data attributes.
 - Define a state for unknown/unavailable data (for example data-level="unknown").
+- Pseudo-elements are allowed for supportive labels and decoration, but do not rely on ::before/::after for primary data values that must remain accessible.
+- Keep primary content in real DOM text nodes (area, device, entity, percentage/state text) for accessibility and reliable copy/select behavior.
+- Prefer a single-element progress track when practical (for example gradient background driven by a CSS variable), rather than unnecessary nested markup.
 
 ## Data and Discovery Rules
 - Default behavior should include all relevant battery entities.

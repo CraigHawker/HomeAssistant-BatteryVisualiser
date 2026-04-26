@@ -1,0 +1,13 @@
+<tr class="battery-cell" data-level="{{levelState}}" data-entity-id="{{entityId}}">
+	<td data-col="area" data-label="Area">{{areaName}}</td>
+	<td data-col="device" data-label="Device">{{deviceName}}</td>
+	<td data-col="entity" data-label="Entity">{{entityName}}</td>
+	<td data-col="percent" data-label="Level" data-level="{{levelState}}">
+		{{#if isNumeric}}
+		{{> battery-progress this}}
+		<span class="value">{{percentage}}%</span>
+		{{else}}
+		<span class="value" data-state="unknown">{{stateLabel}}</span>
+		{{/if}}
+	</td>
+</tr>

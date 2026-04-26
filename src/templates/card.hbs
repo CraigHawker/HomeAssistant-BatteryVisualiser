@@ -1,0 +1,28 @@
+<ha-card class="battery">
+	<header>
+		<h2>{{title}}</h2>
+		{{#if subtitle}}
+		<p>{{subtitle}}</p>
+		{{/if}}
+	</header>
+
+	{{#if hasBatteries}}
+	<table class="battery-table" aria-label="Battery devices">
+		<thead>
+			<tr>
+				<th scope="col" data-col="area">Area</th>
+				<th scope="col" data-col="device">Device</th>
+				<th scope="col" data-col="entity">Entity</th>
+				<th scope="col" data-col="percent">Level</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each rows}}
+				{{> battery-row this}}
+			{{/each}}
+		</tbody>
+	</table>
+	{{else}}
+	<p class="battery-empty">{{emptyMessage}}</p>
+	{{/if}}
+</ha-card>
