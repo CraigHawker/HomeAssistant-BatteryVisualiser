@@ -1,6 +1,5 @@
 {
   "name": "Battery Visualiser",
   "render_readme": true,
-  "filename": "battery-card.js",
-    "category": "lovelace"
+  "filename": "battery-card.js"
 }
