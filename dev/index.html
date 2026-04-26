@@ -74,6 +74,13 @@
       <h2>With Filters (Office only)</h2>
       <battery-visualiser-card></battery-visualiser-card>
     </div>
+
+    <div class="dev-section">
+      <h2>Registry Resolution Harness</h2>
+      <p>Exercises mixed area sources: entity attribute, entity registry, device registry, and missing registries.</p>
+      <battery-visualiser-card id="registry-harness-card"></battery-visualiser-card>
+      <div id="registry-harness-results" role="status" aria-live="polite"></div>
+    </div>
   </div>
 
   <script type="module">
@@ -140,6 +147,128 @@
       }
     };
 
+    // Explicit test fixture for area resolution regression checks
+    const registryHarnessHass = {
+      states: {
+        "sensor.attr_area_battery": {
+          entity_id: "sensor.attr_area_battery",
+          state: "61",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            area_name: "Kitchen",
+            device_name: "Attr Sensor",
+            friendly_name: "Attribute Area Battery"
+          }
+        },
+        "sensor.entity_registry_area_battery": {
+          entity_id: "sensor.entity_registry_area_battery",
+          state: "55",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            device_name: "Entity Registry Sensor",
+            friendly_name: "Entity Registry Area Battery"
+          }
+        },
+        "sensor.device_registry_area_battery": {
+          entity_id: "sensor.device_registry_area_battery",
+          state: "44",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            device_name: "Device Registry Sensor",
+            friendly_name: "Device Registry Area Battery"
+          }
+        },
+        "sensor.no_mapping_battery": {
+          entity_id: "sensor.no_mapping_battery",
+          state: "22",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            device_name: "Unknown Mapping Sensor",
+            friendly_name: "No Mapping Battery"
+          }
+        }
+      },
+      entities: {
+        "sensor.entity_registry_area_battery": {
+          entity_id: "sensor.entity_registry_area_battery",
+          area_id: "area_office"
+        },
+        "sensor.device_registry_area_battery": {
+          entity_id: "sensor.device_registry_area_battery",
+          device_id: "device_bathroom_sensor"
+        }
+      },
+      devices: {
+        "device_bathroom_sensor": {
+          id: "device_bathroom_sensor",
+          area_id: "area_bathroom"
+        }
+      },
+      areas: {
+        "area_office": {
+          id: "area_office",
+          name: "Office"
+        },
+        "area_bathroom": {
+          id: "area_bathroom",
+          name: "Bathroom"
+        }
+      }
+    };
+
+    const runRegistryHarnessChecks = () => {
+      const harnessCard = document.getElementById('registry-harness-card');
+      const resultNode = document.getElementById('registry-harness-results');
+      if (!harnessCard || !harnessCard.shadowRoot || !resultNode) {
+        return;
+      }
+
+      const expectedByEntity = new Map([
+        ['sensor.attr_area_battery', 'Kitchen'],
+        ['sensor.entity_registry_area_battery', 'Office'],
+        ['sensor.device_registry_area_battery', 'Bathroom'],
+        ['sensor.no_mapping_battery', 'Unknown']
+      ]);
+
+      const rows = harnessCard.shadowRoot.querySelectorAll('tbody tr');
+      const failures = [];
+
+      rows.forEach((row) => {
+        const entityCell = row.querySelector('td[data-col="entity"]');
+        const areaCell = row.querySelector('td[data-col="area"]');
+        if (!entityCell || !areaCell) {
+          return;
+        }
+
+        const entityName = entityCell.textContent?.trim() || '';
+        const matchedEntity = Array.from(expectedByEntity.keys()).find((entityId) => entityId.endsWith(`.${entityName}`));
+        if (!matchedEntity) {
+          return;
+        }
+
+        const expectedArea = expectedByEntity.get(matchedEntity);
+        const actualArea = areaCell.textContent?.trim();
+        if (actualArea !== expectedArea) {
+          failures.push(`${matchedEntity}: expected ${expectedArea}, got ${actualArea || '(empty)'}`);
+        }
+      });
+
+      if (failures.length > 0) {
+        resultNode.textContent = `Registry harness failed: ${failures.join(' | ')}`;
+        resultNode.style.color = '#9f1d1d';
+        console.error('[registry-harness] FAIL', failures);
+        return;
+      }
+
+      resultNode.textContent = 'Registry harness passed: area resolution fallback order is working.';
+      resultNode.style.color = '#1f6f2e';
+      console.info('[registry-harness] PASS');
+    };
+
     // Configure cards after they're defined
     customElements.whenDefined('battery-visualiser-card').then(() => {
       const cards = document.querySelectorAll('battery-visualiser-card');
@@ -162,6 +291,15 @@
       cards.forEach(card => {
         card.hass = mockHass;
       });
+
+      const registryHarnessCard = document.getElementById('registry-harness-card');
+      if (registryHarnessCard) {
+        registryHarnessCard.setConfig({
+          title: 'Registry Mapping Checks'
+        });
+        registryHarnessCard.hass = registryHarnessHass;
+        requestAnimationFrame(() => runRegistryHarnessChecks());
+      }
     });
   </script>
 </body>

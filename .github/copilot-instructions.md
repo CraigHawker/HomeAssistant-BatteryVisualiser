@@ -60,7 +60,27 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
 - Use entity attributes safely:
   - Prefer friendly_name when present.
   - Fall back to entity_id-derived labels when needed.
+- Resolve area data defensively using Home Assistant registries:
+  - Do not assume area_name/area is present on entity attributes.
+  - Resolve in this order: entity attribute area -> entity registry area_id -> device registry area_id -> Unknown.
+  - Handle missing hass.entities/hass.devices/hass.areas without throwing.
 - Normalize state values before rendering.
+
+## Home Assistant Defensive Data Rules
+- Treat entity, device, and area data as partially available at any render cycle.
+- Avoid direct deep property access without guards; use optional chaining and null-safe fallbacks.
+- Keep normalization pure where practical:
+  - Pass required context explicitly (for example hass into row normalizers) instead of hidden globals.
+- Distinguish user-facing unknown states:
+  - Unknown should represent missing metadata or unknown state.
+  - Unavailable should represent explicit Home Assistant unavailable state.
+- Never block rendering because one entity has malformed or missing attributes.
+
+## Regression Checklist for Data Mapping
+- Verify at least one entity that uses device area inheritance ("Use device area") shows the actual area.
+- Verify an entity with no area mapping still renders as Unknown without errors.
+- Verify sorting remains stable when area names resolve from mixed sources.
+- Verify build output compiles after any mapping changes.
 
 ## Visual Editor Requirements
 - Provide getConfigElement and a custom editor element.
