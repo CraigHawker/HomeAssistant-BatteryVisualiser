@@ -41,6 +41,21 @@ function handlebarsPlugin() {
 export default defineConfig({
   plugins: [handlebarsPlugin()],
   root: process.env.NODE_ENV === "development" ? "dev" : ".",
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.test.js"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov"],
+      include: ["src/battery-card.js", "src/battery-data.js"],
+      thresholds: {
+        lines: 85,
+        functions: 80,
+        statements: 85,
+        branches: 75
+      }
+    }
+  },
   build: {
     outDir: "dist",
     emptyOutDir: true,

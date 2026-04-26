@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "vite",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "prebuild": "npm run test",
     "build": "vite build",
     "build:release": "npm run build"
   },
   "dependencies": {},
   "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@vitest/coverage-v8": "^2.1.8",
     "handlebars": "^4.7.8",
     "jsdom": "^26.1.0",
     "sass": "^1.77.8",
