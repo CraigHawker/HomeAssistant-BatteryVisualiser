@@ -103,6 +103,9 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
 
 ## Development Tasks
 - `npm run dev` — Start Vite dev server for local preview with HMR. Use this during development; open test/preview.html and refresh after changes.
+- `npm run test` — Run unit and component test suites.
+- `npm run test:coverage` — Run tests with coverage thresholds and reporting.
+- `npm run test:e2e` — Run Playwright smoke/integration checks.
 - `npm run build` — Build the card bundle and SCSS into dist/battery-card.js.
 - `npm run build:release` — Alias for build (matches release workflow script).
 
@@ -112,8 +115,23 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
 ## Coding Quality
 - Remove unused code and imports.
 - Keep functions small and focused.
-- Add concise comments only for non-obvious logic.
+- Keep comments intentional and maintainable:
+  - Document entry points and exported APIs.
+  - Add function and parameter descriptions where behavior is not obvious.
+  - Explain non-obvious implementation nuances and defensive fallbacks.
 - Maintain consistent naming and formatting.
+
+## Mandatory Implementation Workflow
+- Before implementation, propose which existing tests should be removed, updated, or replaced, and why.
+- Follow TDD by scaffolding or updating tests before implementation changes.
+- Use the established layered test pattern where applicable:
+  - Unit tests for pure logic and normalization.
+  - Component tests for custom element rendering and DOM output.
+  - Playwright smoke/integration tests for end-to-end behavior in the dev harness.
+- After implementation, run the full relevant suite and ensure all tests pass.
+- Treat coverage regressions as blockers:
+  - Raise coverage where too low by adding or improving tests.
+  - Keep coverage gates healthy and update thresholds only with explicit justification.
 
 ## Definition of Done for Early Milestones
 - Card loads in Home Assistant resources and renders without runtime errors.
