@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Battery Visualiser card preview</title>
+  <desc id="desc">Stylized preview showing battery levels in a Home Assistant style table.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f4f8ff" />
+      <stop offset="100%" stop-color="#eefaf5" />
+    </linearGradient>
+    <linearGradient id="barGood" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22c55e" />
+      <stop offset="100%" stop-color="#16a34a" />
+    </linearGradient>
+    <linearGradient id="barWarn" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="barLow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#dc2626" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect x="72" y="60" width="1056" height="510" rx="18" fill="#ffffff" stroke="#dbe3f0" />
+
+  <text x="112" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="700" fill="#0f172a">
+    Battery Visualiser
+  </text>
+  <text x="112" y="168" font-family="Segoe UI, Arial, sans-serif" font-size="22" fill="#475569">
+    Home Assistant custom card preview
+  </text>
+
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#334155">
+    <text x="112" y="230">Living Room - Phone Battery - 87%</text>
+    <rect x="112" y="248" width="976" height="20" rx="10" fill="#e2e8f0" />
+    <rect x="112" y="248" width="849" height="20" rx="10" fill="url(#barGood)" />
+
+    <text x="112" y="320">Office - Keyboard Battery - 42%</text>
+    <rect x="112" y="338" width="976" height="20" rx="10" fill="#e2e8f0" />
+    <rect x="112" y="338" width="410" height="20" rx="10" fill="url(#barWarn)" />
+
+    <text x="112" y="410">Garage - Sensor Battery - 15%</text>
+    <rect x="112" y="428" width="976" height="20" rx="10" fill="#e2e8f0" />
+    <rect x="112" y="428" width="146" height="20" rx="10" fill="url(#barLow)" />
+  </g>
+</svg>
