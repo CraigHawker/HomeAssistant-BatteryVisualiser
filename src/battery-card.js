@@ -65,7 +65,31 @@ const isBatteryEntity = (entity) => {
   return hasBatteryClass || (hasPercentUnit && nameHint);
 };
 
-const normalizeBatteryRow = (entity) => {
+const resolveAreaName = (entity, hass) => {
+  const attrs = entity.attributes || {};
+
+  if (attrs.area_name || attrs.area) {
+    return attrs.area_name || attrs.area;
+  }
+
+  const entityRegistry = hass?.entities?.[entity.entity_id];
+  const areaRegistry = hass?.areas;
+  const deviceRegistry = hass?.devices;
+
+  if (entityRegistry?.area_id && areaRegistry?.[entityRegistry.area_id]?.name) {
+    return areaRegistry[entityRegistry.area_id].name;
+  }
+
+  const deviceId = entityRegistry?.device_id;
+  const deviceAreaId = deviceId ? deviceRegistry?.[deviceId]?.area_id : null;
+  if (deviceAreaId && areaRegistry?.[deviceAreaId]?.name) {
+    return areaRegistry[deviceAreaId].name;
+  }
+
+  return "Unknown";
+};
+
+const normalizeBatteryRow = (entity, hass) => {
   const attrs = entity.attributes || {};
   const rawState = entity.state;
   const numeric = Number.parseFloat(rawState);
@@ -77,7 +101,7 @@ const normalizeBatteryRow = (entity) => {
 
   return {
     entityId: entity.entity_id,
-    areaName: attrs.area_name || attrs.area || "Unknown",
+    areaName: resolveAreaName(entity, hass),
     deviceName,
     entityName: toEntityName(entity.entity_id),
     isNumeric,
@@ -151,7 +175,7 @@ class BatteryVisualiserCard extends HTMLElement {
       .filter(isBatteryEntity)
       .filter((entity) => include.size === 0 || include.has(entity.entity_id))
       .filter((entity) => !exclude.has(entity.entity_id))
-      .map(normalizeBatteryRow)
+      .map((entity) => normalizeBatteryRow(entity, this._hass))
       .sort((a, b) => {
         return (
           a.areaName.localeCompare(b.areaName) ||
