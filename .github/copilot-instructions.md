@@ -33,10 +33,17 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
   - main.scss
   - component partials as needed
 - src/
-  - battery-card.js
-  - battery-card-editor.js
+  - battery-card.ts
+  - battery-card-editor.ts
+  - battery-data.ts
 - dist/
   - battery-card.js (release artifact)
+
+## TypeScript Requirements
+- Implement all new runtime and test code in TypeScript (`.ts`) by default.
+- Do not introduce `any`; prefer explicit interfaces, unions, and type guards.
+- Keep strict typing enabled and passing (`npm run typecheck`) before merge.
+- Prefer extensionless local imports in TypeScript source/tests for compatibility with the current TS config.
 
 ## HTML and CSS Conventions
 - Use semantic table elements for tabular battery data:
@@ -89,6 +96,7 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
 
 ## Build and Release Expectations
 - Vite build must produce a distributable card bundle in dist/.
+- Build validation must include TypeScript compilation/type-checking so TS sources are verified before bundling.
 - Keep runtime dependencies minimal.
 - Ensure generated/output files stay out of git unless explicitly intended.
 - Maintain two GitHub Actions workflows:
@@ -104,13 +112,14 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
 ## Development Tasks
 - `npm run dev` — Start Vite dev server for local preview with HMR. Use this during development; open test/preview.html and refresh after changes.
 - `npm run test` — Run unit and component test suites.
+- `npm run typecheck` — Run strict TypeScript checks with no emit.
 - `npm run test:coverage` — Run tests with coverage thresholds and reporting.
 - `npm run test:e2e` — Run Playwright smoke/integration checks.
-- `npm run build` — Build the card bundle and SCSS into dist/battery-card.js.
+- `npm run build` — Run prebuild validation (tests + typecheck), then build the card bundle and SCSS into dist/battery-card.js.
 - `npm run build:release` — Alias for build (matches release workflow script).
 
 ## Scripts and Tools
-- **.vscode/tasks.json** — Defines VS Code tasks for Build, Build Release, and Dev Server.
+- **.vscode/tasks.json** — Defines VS Code tasks for Typecheck, Build, Build Release, Validate, and Dev Server.
 
 ## Coding Quality
 - Remove unused code and imports.

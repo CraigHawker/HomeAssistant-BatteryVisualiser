@@ -43,11 +43,11 @@ export default defineConfig({
   root: process.env.NODE_ENV === "development" ? "dev" : ".",
   test: {
     environment: "jsdom",
-    include: ["src/**/*.test.js"],
+    include: ["src/**/*.test.{js,ts}"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
-      include: ["src/battery-card.js", "src/battery-data.js"],
+      include: ["src/battery-card.ts", "src/battery-data.ts"],
       thresholds: {
         lines: 85,
         functions: 80,
@@ -61,7 +61,7 @@ export default defineConfig({
     emptyOutDir: true,
     codeSplitting: false,
     lib: {
-      entry: resolve(__dirname, "src/battery-card.js"),
+      entry: resolve(__dirname, "src/battery-card.ts"),
       formats: ["es"],
       fileName: () => "battery-card.js"
     },

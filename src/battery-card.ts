@@ -3,8 +3,27 @@ import styles from "./styles/main.scss?inline";
 import renderCardTemplate from "./templates/card.hbs";
 import batteryRowTemplate from "./templates/battery-row.hbs";
 import batteryProgressTemplate from "./templates/battery-progress.hbs";
-import { isBatteryEntity, normalizeBatteryRow } from "./battery-data.js";
-import "./battery-card-editor.js";
+import {
+  isBatteryEntity,
+  normalizeBatteryRow,
+  type HomeAssistantLike
+} from "./battery-data";
+import "./battery-card-editor";
+
+interface CardConfig {
+  title: string;
+  subtitle: string;
+  include: string[] | string;
+  exclude: string[] | string;
+}
+
+type CardConfigInput = Partial<CardConfig>;
+
+interface CustomCardDefinition {
+  type: string;
+  name: string;
+  description: string;
+}
 
 const DEFAULT_TITLE = "Batteries";
 const DEFAULT_EMPTY_MESSAGE = "No battery entities found.";
@@ -14,43 +33,51 @@ Handlebars.registerPartial("battery-progress", batteryProgressTemplate);
 
 /**
  * Parses include/exclude config values from array or comma-delimited string.
- * @param {string[] | string | undefined} value User-provided entity list.
- * @returns {string[]} Normalized entity ids.
+ * @param value User-provided entity list.
+ * @returns Normalized entity ids.
  */
-const parseEntityList = (value) => {
+const parseEntityList = (value: string[] | string | undefined): string[] => {
   if (Array.isArray(value)) {
-    return value.filter(Boolean);
+    return value.filter((entityId) => entityId.length > 0);
   }
 
   if (typeof value === "string") {
     return value
       .split(",")
       .map((item) => item.trim())
-      .filter(Boolean);
+      .filter((item) => item.length > 0);
   }
 
   return [];
 };
 
 class BatteryVisualiserCard extends HTMLElement {
+  private _config: CardConfig;
+  private _hass: HomeAssistantLike | null;
+
   constructor() {
     super();
-    this._config = {};
+    this._config = {
+      title: DEFAULT_TITLE,
+      subtitle: "",
+      include: [],
+      exclude: []
+    };
     this._hass = null;
     this.attachShadow({ mode: "open" });
   }
 
-  static getConfigElement() {
+  static getConfigElement(): HTMLElement {
     return document.createElement("battery-visualiser-card-editor");
   }
 
-  static getStubConfig() {
+  static getStubConfig(): CardConfigInput {
     return {
       title: DEFAULT_TITLE
     };
   }
 
-  setConfig(config) {
+  setConfig(config: CardConfigInput): void {
     if (!config || typeof config !== "object") {
       throw new Error("Invalid configuration");
     }
@@ -66,16 +93,16 @@ class BatteryVisualiserCard extends HTMLElement {
     this.render();
   }
 
-  set hass(hass) {
+  set hass(hass: HomeAssistantLike | null) {
     this._hass = hass;
     this.render();
   }
 
-  getCardSize() {
+  getCardSize(): number {
     return 4;
   }
 
-  render() {
+  render(): void {
     // Keep rendering resilient even when Home Assistant data is partially available.
     if (!this.shadowRoot) {
       return;
@@ -89,7 +116,7 @@ class BatteryVisualiserCard extends HTMLElement {
       .filter(isBatteryEntity)
       .filter((entity) => include.size === 0 || include.has(entity.entity_id))
       .filter((entity) => !exclude.has(entity.entity_id))
-      .map((entity) => normalizeBatteryRow(entity, this._hass))
+      .map((entity) => normalizeBatteryRow(entity, this._hass ?? undefined))
       .sort((a, b) => {
         return (
           a.areaName.localeCompare(b.areaName) ||
@@ -110,7 +137,15 @@ class BatteryVisualiserCard extends HTMLElement {
   }
 }
 
-customElements.define("battery-visualiser-card", BatteryVisualiserCard);
+declare global {
+  interface Window {
+    customCards?: CustomCardDefinition[];
+  }
+}
+
+if (!customElements.get("battery-visualiser-card")) {
+  customElements.define("battery-visualiser-card", BatteryVisualiserCard);
+}
 
 // Register the card so it appears in Home Assistant's custom card picker.
 window.customCards = window.customCards || [];

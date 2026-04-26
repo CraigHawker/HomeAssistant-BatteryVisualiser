@@ -23,8 +23,23 @@ A Home Assistant Lovelace custom card that visualises battery entities in a clea
 ```bash
 npm ci
 npm run dev
+npm run typecheck
 npm run build
 ```
+
+### TypeScript policy
+
+- New runtime and test code should be implemented in TypeScript (`.ts`).
+- Keep strict typing enabled and passing via `npm run typecheck`.
+- Avoid `any`; prefer explicit interfaces, unions, and type guards.
+- Use extensionless local imports in TypeScript source/tests.
+
+### Validation workflow
+
+- `npm run test` runs unit and component tests.
+- `npm run typecheck` runs strict TypeScript checks with no emit.
+- `npm run build` runs prebuild validation (`test` + `typecheck`) before bundling.
+- VS Code tasks include `Typecheck`, `Build`, `Build Release`, and `Validate`.
 
 ## Release process
 

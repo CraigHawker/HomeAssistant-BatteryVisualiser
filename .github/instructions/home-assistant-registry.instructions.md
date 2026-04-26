@@ -1,9 +1,12 @@
 ---
-applyTo: "src/battery-card.js"
+applyTo: "src/battery-card.ts"
 description: "Use when changing entity normalization, area mapping, sorting, or Home Assistant data access in the card runtime."
 ---
 
 # Home Assistant Registry Mapping Rules
+
+- Keep runtime code TypeScript-first with explicit types for entity/device/area access.
+- Do not use `any`; add or refine interfaces/type guards when registry shapes evolve.
 
 - Treat Home Assistant runtime data as partially available at all times.
 - Never assume entity attributes include area metadata.

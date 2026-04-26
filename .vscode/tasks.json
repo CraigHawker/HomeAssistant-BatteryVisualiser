@@ -2,6 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Typecheck",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "typecheck"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
       "label": "Build",
       "type": "shell",
       "command": "npm",
@@ -33,6 +45,24 @@
       "type": "shell",
       "command": "npm",
       "args": ["run", "build:release"],
+      "group": "build",
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*?(Error|error|ERROR).*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Validate",
+      "type": "shell",
+      "command": "npm run test && npm run typecheck && npm run build",
       "group": "build",
       "problemMatcher": {
         "pattern": {

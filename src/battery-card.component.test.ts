@@ -3,9 +3,27 @@
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
-import "./battery-card.js";
+import type { HomeAssistantLike, HomeAssistantStateEntity } from "./battery-data";
+import "./battery-card";
 
-const buildEntity = (entityId, state = "50", attributes = {}) => ({
+interface CardConfig {
+  title?: string;
+  subtitle?: string;
+  include?: string[] | string;
+  exclude?: string[] | string;
+}
+
+type BatteryCardElement = HTMLElement & {
+  setConfig: (config: CardConfig) => void;
+  hass: HomeAssistantLike;
+  shadowRoot: ShadowRoot;
+};
+
+const buildEntity = (
+  entityId: string,
+  state = "50",
+  attributes: Record<string, unknown> = {}
+): HomeAssistantStateEntity => ({
   entity_id: entityId,
   state,
   attributes: {
@@ -15,8 +33,14 @@ const buildEntity = (entityId, state = "50", attributes = {}) => ({
   }
 });
 
-const mountCard = ({ config = {}, hass = {} } = {}) => {
-  const card = document.createElement("battery-visualiser-card");
+const mountCard = ({
+  config = {},
+  hass = {}
+}: {
+  config?: CardConfig;
+  hass?: HomeAssistantLike;
+} = {}): BatteryCardElement => {
+  const card = document.createElement("battery-visualiser-card") as BatteryCardElement;
   document.body.appendChild(card);
   card.setConfig({ title: "Batteries", ...config });
   card.hass = hass;
@@ -29,7 +53,7 @@ describe("battery-visualiser-card component", () => {
   });
 
   it("renders rows with area resolution from mixed registry sources", () => {
-    const hass = {
+    const hass: HomeAssistantLike = {
       states: {
         "sensor.attr_area_battery": buildEntity("sensor.attr_area_battery", "80", {
           friendly_name: "Attribute Sensor",
@@ -72,7 +96,7 @@ describe("battery-visualiser-card component", () => {
     const rows = Array.from(card.shadowRoot.querySelectorAll("tbody tr"));
     expect(rows.length).toBe(4);
 
-    const areaByEntity = new Map(
+    const areaByEntity = new Map<string | null, string | undefined>(
       rows.map((row) => [
         row.getAttribute("data-entity-id"),
         row.querySelector('td[data-col="area"]')?.textContent?.trim()
@@ -86,7 +110,7 @@ describe("battery-visualiser-card component", () => {
   });
 
   it("renders state labels for unavailable and unknown values", () => {
-    const hass = {
+    const hass: HomeAssistantLike = {
       states: {
         "sensor.unavailable_battery": buildEntity("sensor.unavailable_battery", "unavailable", {
           friendly_name: "Unavailable Sensor"
@@ -98,16 +122,16 @@ describe("battery-visualiser-card component", () => {
     };
 
     const card = mountCard({ hass });
-    const values = Array.from(card.shadowRoot.querySelectorAll("tbody td[data-col='percent'] .value")).map(
-      (node) => node.textContent?.trim()
-    );
+    const values = Array.from(
+      card.shadowRoot.querySelectorAll("tbody td[data-col='percent'] .value")
+    ).map((node) => node.textContent?.trim());
 
     expect(values).toContain("Unavailable");
     expect(values).toContain("Unknown");
   });
 
   it("renders configured title and subtitle", () => {
-    const hass = {
+    const hass: HomeAssistantLike = {
       states: {
         "sensor.phone_battery": buildEntity("sensor.phone_battery", "92", {
           friendly_name: "Phone"
@@ -128,7 +152,7 @@ describe("battery-visualiser-card component", () => {
   });
 
   it("shows empty message when no battery entities are present", () => {
-    const hass = {
+    const hass: HomeAssistantLike = {
       states: {
         "sensor.kitchen_temperature": {
           entity_id: "sensor.kitchen_temperature",

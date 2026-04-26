@@ -1,17 +1,39 @@
-const parseListValue = (value) => {
+interface EditorConfig {
+  title: string;
+  subtitle: string;
+  include: string[];
+  exclude: string[];
+}
+
+type EditorConfigInput = Partial<EditorConfig>;
+
+type EditorConfigKey = keyof EditorConfig;
+
+const parseListValue = (value: string): string[] => {
   return value
     .split(",")
     .map((item) => item.trim())
-    .filter(Boolean);
+    .filter((item) => item.length > 0);
+};
+
+const isEditorConfigKey = (value: string): value is EditorConfigKey => {
+  return ["title", "subtitle", "include", "exclude"].includes(value);
 };
 
 class BatteryVisualiserCardEditor extends HTMLElement {
+  private _config: EditorConfig;
+
   constructor() {
     super();
-    this._config = {};
+    this._config = {
+      title: "",
+      subtitle: "",
+      include: [],
+      exclude: []
+    };
   }
 
-  setConfig(config) {
+  setConfig(config: EditorConfigInput): void {
     this._config = {
       title: "",
       subtitle: "",
@@ -22,21 +44,17 @@ class BatteryVisualiserCardEditor extends HTMLElement {
     this.render();
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.render();
   }
 
-  render() {
+  render(): void {
     if (!this.isConnected) {
       return;
     }
 
-    const includeValue = Array.isArray(this._config.include)
-      ? this._config.include.join(", ")
-      : "";
-    const excludeValue = Array.isArray(this._config.exclude)
-      ? this._config.exclude.join(", ")
-      : "";
+    const includeValue = this._config.include.join(", ");
+    const excludeValue = this._config.exclude.join(", ");
 
     this.innerHTML = `
       <style>
@@ -95,12 +113,20 @@ class BatteryVisualiserCardEditor extends HTMLElement {
     });
   }
 
-  _handleInput = (event) => {
+  private _handleInput = (event: Event): void => {
     const input = event.currentTarget;
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+
     const key = input.dataset.key;
+    if (!key || !isEditorConfigKey(key)) {
+      return;
+    }
+
     const rawValue = input.value || "";
 
-    const nextConfig = {
+    const nextConfig: EditorConfig = {
       ...this._config
     };
 
@@ -121,4 +147,6 @@ class BatteryVisualiserCardEditor extends HTMLElement {
   };
 }
 
-customElements.define("battery-visualiser-card-editor", BatteryVisualiserCardEditor);
+if (!customElements.get("battery-visualiser-card-editor")) {
+  customElements.define("battery-visualiser-card-editor", BatteryVisualiserCardEditor);
+}

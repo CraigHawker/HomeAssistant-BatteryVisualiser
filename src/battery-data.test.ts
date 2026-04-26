@@ -1,7 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { isBatteryEntity, normalizeBatteryRow } from "./battery-data.js";
+import {
+  isBatteryEntity,
+  normalizeBatteryRow,
+  type HomeAssistantLike,
+  type HomeAssistantStateEntity
+} from "./battery-data";
 
-const batteryEntity = (entityId, state = "50", attributes = {}) => ({
+const batteryEntity = (
+  entityId: string,
+  state = "50",
+  attributes: Record<string, unknown> = {}
+): HomeAssistantStateEntity => ({
   entity_id: entityId,
   state,
   attributes: {
@@ -38,7 +47,7 @@ describe("isBatteryEntity", () => {
 });
 
 describe("normalizeBatteryRow area resolution", () => {
-  const hassFixture = {
+  const hassFixture: HomeAssistantLike = {
     entities: {
       "sensor.entity_area_battery": { area_id: "area_office" },
       "sensor.device_area_battery": { device_id: "device_bathroom" }
@@ -120,7 +129,7 @@ describe("normalizeBatteryRow state handling", () => {
 
 describe("sorting behavior", () => {
   it("supports deterministic sorting across mixed area sources", () => {
-    const hassFixture = {
+    const hassFixture: HomeAssistantLike = {
       entities: {
         "sensor.alpha_battery": { area_id: "area_b" },
         "sensor.beta_battery": { area_id: "area_a" }
@@ -132,9 +141,21 @@ describe("sorting behavior", () => {
     };
 
     const rows = [
-      normalizeBatteryRow(batteryEntity("sensor.alpha_battery", "30", { friendly_name: "Alpha" }), hassFixture),
-      normalizeBatteryRow(batteryEntity("sensor.gamma_battery", "30", { area_name: "Area A", friendly_name: "Gamma" }), hassFixture),
-      normalizeBatteryRow(batteryEntity("sensor.beta_battery", "30", { friendly_name: "Beta" }), hassFixture)
+      normalizeBatteryRow(
+        batteryEntity("sensor.alpha_battery", "30", { friendly_name: "Alpha" }),
+        hassFixture
+      ),
+      normalizeBatteryRow(
+        batteryEntity("sensor.gamma_battery", "30", {
+          area_name: "Area A",
+          friendly_name: "Gamma"
+        }),
+        hassFixture
+      ),
+      normalizeBatteryRow(
+        batteryEntity("sensor.beta_battery", "30", { friendly_name: "Beta" }),
+        hassFixture
+      )
     ].sort((a, b) => {
       return (
         a.areaName.localeCompare(b.areaName) ||

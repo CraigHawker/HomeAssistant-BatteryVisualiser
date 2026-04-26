@@ -8,8 +8,9 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
-    "prebuild": "npm run test",
+    "prebuild": "npm run test && npm run typecheck",
     "build": "vite build",
     "build:release": "npm run build"
   },
@@ -19,6 +20,7 @@
     "handlebars": "^4.7.8",
     "jsdom": "^29.0.2",
     "sass": "^1.77.8",
+    "typescript": "^5.9.3",
     "vite": "^8.0.10",
     "vitest": "^4.1.5"
   }
