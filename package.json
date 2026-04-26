@@ -13,14 +13,13 @@
     "build": "vite build",
     "build:release": "npm run build"
   },
-  "dependencies": {},
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^4.1.5",
     "handlebars": "^4.7.8",
-    "jsdom": "^26.1.0",
+    "jsdom": "^29.0.2",
     "sass": "^1.77.8",
-    "vite": "^5.4.10",
-    "vitest": "^2.1.8"
+    "vite": "^8.0.10",
+    "vitest": "^4.1.5"
   }
 }

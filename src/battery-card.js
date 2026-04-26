@@ -12,6 +12,11 @@ const DEFAULT_EMPTY_MESSAGE = "No battery entities found.";
 Handlebars.registerPartial("battery-row", batteryRowTemplate);
 Handlebars.registerPartial("battery-progress", batteryProgressTemplate);
 
+/**
+ * Parses include/exclude config values from array or comma-delimited string.
+ * @param {string[] | string | undefined} value User-provided entity list.
+ * @returns {string[]} Normalized entity ids.
+ */
 const parseEntityList = (value) => {
   if (Array.isArray(value)) {
     return value.filter(Boolean);
@@ -71,6 +76,7 @@ class BatteryVisualiserCard extends HTMLElement {
   }
 
   render() {
+    // Keep rendering resilient even when Home Assistant data is partially available.
     if (!this.shadowRoot) {
       return;
     }
@@ -106,6 +112,7 @@ class BatteryVisualiserCard extends HTMLElement {
 
 customElements.define("battery-visualiser-card", BatteryVisualiserCard);
 
+// Register the card so it appears in Home Assistant's custom card picker.
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "battery-visualiser-card",

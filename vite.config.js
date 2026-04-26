@@ -59,6 +59,7 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
+    codeSplitting: false,
     lib: {
       entry: resolve(__dirname, "src/battery-card.js"),
       formats: ["es"],
@@ -68,8 +69,7 @@ export default defineConfig({
       output: {
         generatedCode: {
           preset: "es2015"
-        },
-        inlineDynamicImports: true
+        }
       }
     }
   }
