@@ -40,6 +40,7 @@ function handlebarsPlugin() {
 
 export default defineConfig({
   plugins: [handlebarsPlugin()],
+  root: process.env.NODE_ENV === "development" ? "dev" : ".",
   build: {
     outDir: "dist",
     emptyOutDir: true,

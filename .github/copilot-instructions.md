@@ -82,14 +82,12 @@ Build a Home Assistant custom Lovelace card that visualises battery entities wit
 - **Build Output**: Single file at dist/battery-card.js (~67 kB uncompressed, ~17 kB gzipped).
 
 ## Development Tasks
-- `npm run dev` — Start Vite dev server for local preview with HMR.
+- `npm run dev` — Start Vite dev server for local preview with HMR. Use this during development; open test/preview.html and refresh after changes.
 - `npm run build` — Build the card bundle and SCSS into dist/battery-card.js.
 - `npm run build:release` — Alias for build (matches release workflow script).
-- `npm run preview` — Build and generate test/preview.html with dummy battery data for HTML/CSS iteration.
 
 ## Scripts and Tools
-- **scripts/gen-preview.js** — Generates test/preview.html with mock Home Assistant state and multiple card instances to test config variations.
-- **.vscode/tasks.json** — Defines VS Code tasks for Build, Build Release, Dev Server, and Generate Preview.
+- **.vscode/tasks.json** — Defines VS Code tasks for Build, Build Release, and Dev Server.
 
 ## Coding Quality
 - Remove unused code and imports.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Battery Visualiser Preview</title>
+  <title>Battery Visualiser – Development</title>
   <style>
     * {
       box-sizing: border-box;
@@ -24,7 +24,7 @@
       color: var(--primary-text-color);
     }
 
-    .preview-container {
+    .dev-container {
       max-width: 800px;
       margin: 0 auto;
     }
@@ -33,7 +33,7 @@
       margin-top: 0;
     }
 
-    .preview-section {
+    .dev-section {
       background: white;
       border-radius: 8px;
       padding: 20px;
@@ -45,68 +45,99 @@
       display: block;
     }
 
-    .controls {
-      margin-bottom: 20px;
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    button {
-      padding: 10px 16px;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
     @media (max-width: 600px) {
-      .controls {
-        grid-template-columns: 1fr;
-      }
-
       body {
         padding: 10px;
       }
 
-      .preview-section {
+      .dev-section {
         padding: 15px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="preview-container">
-    <h1>🔋 Battery Visualiser Preview</h1>
+  <div class="dev-container">
+    <h1>🔋 Battery Visualiser – Dev</h1>
 
-    <div class="preview-section">
+    <div class="dev-section">
       <h2>Default Configuration</h2>
       <battery-visualiser-card></battery-visualiser-card>
     </div>
 
-    <div class="preview-section">
+    <div class="dev-section">
       <h2>With Title & Subtitle</h2>
       <battery-visualiser-card></battery-visualiser-card>
     </div>
 
-    <div class="preview-section">
+    <div class="dev-section">
       <h2>With Filters (Office only)</h2>
       <battery-visualiser-card></battery-visualiser-card>
     </div>
   </div>
 
   <script type="module">
-    import '../dist/battery-card.js';
+    import '../src/battery-card.js';
 
     // Mock Home Assistant environment
     const mockHass = {
-      states: {"sensor.phone_battery":{"entity_id":"sensor.phone_battery","state":"87","attributes":{"device_class":"battery","unit_of_measurement":"%","area_name":"Living Room","device_name":"iPhone 15","friendly_name":"iPhone 15 Battery"}},"sensor.tablet_battery":{"entity_id":"sensor.tablet_battery","state":"42","attributes":{"device_class":"battery","unit_of_measurement":"%","area_name":"Bedroom","device_name":"iPad Pro","friendly_name":"iPad Pro Battery"}},"sensor.watch_battery":{"entity_id":"sensor.watch_battery","state":"15","attributes":{"device_class":"battery","unit_of_measurement":"%","area_name":"Office","device_name":"Apple Watch","friendly_name":"Apple Watch Battery"}},"sensor.laptop_battery":{"entity_id":"sensor.laptop_battery","state":"unavailable","attributes":{"device_class":"battery","unit_of_measurement":"%","area_name":"Office","device_name":"MacBook Pro","friendly_name":"MacBook Pro Battery"}},"sensor.car_battery":{"entity_id":"sensor.car_battery","state":"unknown","attributes":{"device_class":"battery","unit_of_measurement":"%","area_name":"Garage","device_name":"Electric Car","friendly_name":"Car Battery"}}}
+      states: {
+        "sensor.phone_battery": {
+          entity_id: "sensor.phone_battery",
+          state: "87",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            area_name: "Living Room",
+            device_name: "iPhone 15",
+            friendly_name: "iPhone 15 Battery"
+          }
+        },
+        "sensor.tablet_battery": {
+          entity_id: "sensor.tablet_battery",
+          state: "42",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            area_name: "Bedroom",
+            device_name: "iPad Pro",
+            friendly_name: "iPad Pro Battery"
+          }
+        },
+        "sensor.watch_battery": {
+          entity_id: "sensor.watch_battery",
+          state: "15",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            area_name: "Office",
+            device_name: "Apple Watch",
+            friendly_name: "Apple Watch Battery"
+          }
+        },
+        "sensor.laptop_battery": {
+          entity_id: "sensor.laptop_battery",
+          state: "unavailable",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            area_name: "Office",
+            device_name: "MacBook Pro",
+            friendly_name: "MacBook Pro Battery"
+          }
+        },
+        "sensor.car_battery": {
+          entity_id: "sensor.car_battery",
+          state: "unknown",
+          attributes: {
+            device_class: "battery",
+            unit_of_measurement: "%",
+            area_name: "Garage",
+            device_name: "Electric Car",
+            friendly_name: "Car Battery"
+          }
+        }
+      }
     };
 
     // Configure cards after they're defined

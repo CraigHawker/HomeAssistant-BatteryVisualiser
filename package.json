@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:release": "npm run build",
-    "preview": "npm run build && node scripts/gen-preview.js"
+    "build:release": "npm run build"
   },
   "dependencies": {},
   "devDependencies": {

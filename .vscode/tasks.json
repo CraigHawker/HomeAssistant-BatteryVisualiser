@@ -71,19 +71,6 @@
         "panel": "shared",
         "focus": false
       }
-    },
-    {
-      "label": "Generate Preview",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "preview"],
-      "dependsOn": ["Build"],
-      "group": "build",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "silent",
-        "panel": "shared"
-      }
     }
   ]
 }
